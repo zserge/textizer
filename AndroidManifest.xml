@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="trikita.textizer" android:versionCode="1" android:versionName="1.0">
+	<application android:label="@string/app_name"
+		android:icon="@drawable/ic_launcher">
+
+		<!-- Widget 1x1 -->
+		<receiver android:name=".TextizerProvider1x1" android:label="Textizer 1x1"> 
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/widget1x1" />
+		</receiver>
+
+		<!-- Widget 2x1 -->
+		<receiver android:name=".TextizerProvider2x1" android:label="Textizer 2x1"> 
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/widget2x1" />
+		</receiver>
+
+		<!-- Widget 4x1 -->
+		<receiver android:name=".TextizerProvider4x1" android:label="Textizer 4x1"> 
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/widget4x1" />
+		</receiver>
+
+		<receiver android:name="WidgetPresenter$AlarmReceiver"/>
+
+		<activity android:name=".ConfigActivity" android:label="@string/act_config_name">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+			</intent-filter>
+		</activity>
+
+	</application>
+
+	<!-- Widget configuration file is written to the SD card -->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+	<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="11" />
+</manifest> 

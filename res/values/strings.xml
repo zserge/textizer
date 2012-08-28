@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Textizer</string>
+	<string name="act_config_name">Configure Textizer widget</string>
+</resources>
