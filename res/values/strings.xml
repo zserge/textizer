@@ -2,4 +2,7 @@
 <resources>
 	<string name="app_name">Textizer</string>
 	<string name="act_config_name">Configure Textizer widget</string>
+	<string name="config_help_msg">Please, enter the script name for this widget. The script file will
+be stored on your SD card in the Android/data/trikita.textizer/files directory. You should be able to edit
+it with any text editor you like.</string>
 </resources>

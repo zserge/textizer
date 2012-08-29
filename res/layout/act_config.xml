@@ -15,6 +15,14 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:onClick="onOkButtonClick"
+		android:layout_gravity="center"
+		android:minWidth="180dp"
 		android:text="Ok"
+		/>
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:text="@string/config_help_msg"
 		/>
 </LinearLayout>
