@@ -5,8 +5,10 @@
 		android:icon="@drawable/ic_launcher">
 
 		<!-- Widget 1x1 -->
-		<receiver android:name=".TextizerProvider1x1" android:label="Textizer 1x1"> 
+		<receiver android:name=".appwidget.TextizerAppWidget1x1" android:label="Textizer 1x1">
 			<intent-filter>
+				<action android:name="trikita.textizer.ACTION_UPDATE_COMPLETE" />
+				<action android:name="trikita.textizer.CLICK_ACTION" />
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 			</intent-filter>
 			<meta-data android:name="android.appwidget.provider"
@@ -14,8 +16,10 @@
 		</receiver>
 
 		<!-- Widget 2x1 -->
-		<receiver android:name=".TextizerProvider2x1" android:label="Textizer 2x1"> 
+		<receiver android:name=".appwidget.TextizerAppWidget2x1" android:label="Textizer 2x1">
 			<intent-filter>
+				<action android:name="trikita.textizer.ACTION_UPDATE_COMPLETE" />
+				<action android:name="trikita.textizer.CLICK_ACTION" />
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 			</intent-filter>
 			<meta-data android:name="android.appwidget.provider"
@@ -23,8 +27,10 @@
 		</receiver>
 
 		<!-- Widget 4x1 -->
-		<receiver android:name=".TextizerProvider4x1" android:label="Textizer 4x1"> 
+		<receiver android:name=".appwidget.TextizerAppWidget4x1" android:label="Textizer 4x1">
 			<intent-filter>
+				<action android:name="trikita.textizer.ACTION_UPDATE_COMPLETE" />
+				<action android:name="trikita.textizer.CLICK_ACTION" />
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 			</intent-filter>
 			<meta-data android:name="android.appwidget.provider"
@@ -39,10 +45,12 @@
 			</intent-filter>
 		</activity>
 
+		<service android:name=".SchemeService"/>
+
 	</application>
 
 	<!-- Widget configuration file is written to the SD card -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 	<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="11" />
-</manifest> 
+</manifest>

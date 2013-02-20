@@ -24,6 +24,7 @@ import android.content.BroadcastReceiver;
 import android.os.Build;
 import android.text.Html;
 import android.os.BatteryManager;
+import android.content.SharedPreferences;
 
 public class WidgetPresenter {
 
@@ -72,6 +73,10 @@ public class WidgetPresenter {
 		scheme.getEnvironment().define("style", new SchemeBindings.PaintStyle(this));
 		scheme.getEnvironment().define("grid", new SchemeBindings.Grid(this));
 		scheme.getEnvironment().define("cell", new SchemeBindings.Cell(this));
+		scheme.getEnvironment().define("set-var",
+				new SchemeBindings.SetVariableProcedure(mContext));
+		scheme.getEnvironment().define("get-var", 
+				new SchemeBindings.GetVariableProcedure(mContext));
 		scheme.load(new InputPort(stream));
 		Log.d(tag, "widget script processed");
 	}

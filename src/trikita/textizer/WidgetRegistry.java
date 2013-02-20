@@ -1,4 +1,5 @@
 package trikita.textizer;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -6,6 +7,8 @@ import java.io.*;
 import android.os.FileObserver;
 import android.content.Intent;
 import android.appwidget.AppWidgetManager;
+
+import trikita.textizer.appwidget.TextizerAppWidget;
 
 public class WidgetRegistry {
 
@@ -44,8 +47,7 @@ public class WidgetRegistry {
 		if (observer == null) observer = new WidgetRegisteryObserver(c);
 	}
 
-	public static WidgetPresenter getWidgetPresenter(Context c, int id,
-			TextizerProvider p) {
+	public static WidgetPresenter getWidgetPresenter(Context c, int id, int w, int h) {
 		String scriptName = WidgetRegistry.get(c, id);
 		if (scriptName == null) {
 			Log.e(tag, "No script associated with id " + id);
@@ -55,8 +57,7 @@ public class WidgetRegistry {
 		File f = new File(c.getExternalFilesDir(null), scriptName + ".scm");
 		Log.d(tag, "reading widget script at " + f.getAbsolutePath());
 		try {
-			WidgetPresenter wp = new WidgetPresenter(c, id, p.getWidth(), p.getHeight(),
-					new FileInputStream(f));
+			WidgetPresenter wp = new WidgetPresenter(c, id, w, h, new FileInputStream(f));
 			return wp;
 		} catch (IOException e) {
 			Log.e(tag, "IOException: ", e);

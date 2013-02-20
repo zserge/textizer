@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.text.TextPaint;
 import android.graphics.Typeface;
 import android.text.Layout;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 public class SchemeBindings {
 
@@ -26,6 +28,63 @@ public class SchemeBindings {
 			int h = (int) num(second(args));
 			mWidgetPresenter.updateSize(w, h);
 			return TRUE;
+		}
+	}
+
+	public static String VARIABLES = "vars";
+
+	// (set-var name value)
+	public static class SetVariableProcedure extends Procedure {
+		private Context mContext;
+
+		public SetVariableProcedure(Context c) {
+			mContext = c;
+		}
+
+		public Object apply(Scheme scheme, Object args) {
+			String name = new String((char[])first(args));
+			Object value = second(args);
+
+			Log.d(tag, "save variable " + name);
+
+			SharedPreferences prefs = mContext.getSharedPreferences(VARIABLES, 0);
+			SharedPreferences.Editor editor = prefs.edit();
+
+			if (value instanceof char[]) {
+				editor.putString("string."+name, new String((char[])value));
+				editor.remove("float." + name);
+			} else if (value instanceof Number) {
+				editor.putFloat("float."+name, (float) num(value));
+				editor.remove("string." + name);
+			} else {
+				// TODO: error
+			}
+
+			editor.commit();
+			return 0;
+		}
+	}
+	// (get-var name)
+	public static class GetVariableProcedure extends Procedure {
+		private Context mContext;
+
+		public GetVariableProcedure(Context c) {
+			mContext = c;
+		}
+
+		public Object apply(Scheme scheme, Object args) {
+			String name = new String((char[])first(args));
+
+			Log.d(tag, "get variable " + name);
+
+			SharedPreferences prefs = mContext.getSharedPreferences(VARIABLES, 0);
+			if (prefs.contains("string." + name)) {
+				return prefs.getString("string." + name, "");
+			} else if (prefs.contains("float." + name)) {
+				return prefs.getFloat("float." + name, 0);
+			} else {
+				return FALSE;
+			}
 		}
 	}
 
