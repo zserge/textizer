@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.text.Layout;
 import android.content.Context;
 import android.content.SharedPreferences;
+import java.io.StringReader;
 
 public class SchemeBindings {
 
@@ -45,20 +46,12 @@ public class SchemeBindings {
 			String name = new String((char[])first(args));
 			Object value = second(args);
 
-			Log.d(tag, "save variable " + name);
-
 			SharedPreferences prefs = mContext.getSharedPreferences(VARIABLES, 0);
 			SharedPreferences.Editor editor = prefs.edit();
 
-			if (value instanceof char[]) {
-				editor.putString("string."+name, new String((char[])value));
-				editor.remove("float." + name);
-			} else if (value instanceof Number) {
-				editor.putFloat("float."+name, (float) num(value));
-				editor.remove("string." + name);
-			} else {
-				// TODO: error
-			}
+			String s = stringify(value, true);
+
+			editor.putString(name, s);
 
 			editor.commit();
 			return 0;
@@ -75,16 +68,14 @@ public class SchemeBindings {
 		public Object apply(Scheme scheme, Object args) {
 			String name = new String((char[])first(args));
 
-			Log.d(tag, "get variable " + name);
-
 			SharedPreferences prefs = mContext.getSharedPreferences(VARIABLES, 0);
-			if (prefs.contains("string." + name)) {
-				return prefs.getString("string." + name, "");
-			} else if (prefs.contains("float." + name)) {
-				return prefs.getFloat("float." + name, 0);
-			} else {
+			if (!prefs.contains(name)) {
 				return FALSE;
 			}
+
+			String s = prefs.getString(name, "#f");
+			Object x = new InputPort(new StringReader(s)).read();
+			return x;
 		}
 	}
 
@@ -250,3 +241,4 @@ public class SchemeBindings {
 		}
 	}
 }
+

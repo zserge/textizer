@@ -294,7 +294,7 @@ public abstract class SchemeUtils {
 
 	/** Convert x to a Java String giving its external representation.
 	 * Strings and characters are quoted iff <tt>quoted</tt> is true.. **/
-	static String stringify(Object x, boolean quoted) {
+	public static String stringify(Object x, boolean quoted) {
 		StringBuffer buf = new StringBuffer();
 		stringify(x, quoted, buf);
 		return buf.toString();
