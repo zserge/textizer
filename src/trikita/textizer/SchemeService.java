@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.content.Context;
+import android.content.IntentFilter;
 
 public class SchemeService extends IntentService {
 

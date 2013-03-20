@@ -51,6 +51,8 @@
 
 	<!-- Widget configuration file is written to the SD card -->
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<!-- Some widgets may use battery status information -->
+	<uses-permission android:name="android.permission.BATTERY_STATUS" />
 
 	<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="11" />
 </manifest>

@@ -11,6 +11,9 @@ import android.text.Layout;
 import android.content.Context;
 import android.content.SharedPreferences;
 import java.io.StringReader;
+import android.content.IntentFilter;
+import android.content.Intent;
+import android.os.BatteryManager;
 
 public class SchemeBindings {
 
@@ -88,15 +91,84 @@ public class SchemeBindings {
 		}
 	}
 
-	// (logd ...) - output logs
-	public static class Logger extends Procedure {
+	// (battery ATTRIBUTE) - return formatted battery info
+	public static class SimpleBatteryProvider extends Procedure {
+		private Context mContext;
+		private final static int LEVEL = 1;
+		private final static int IS_CHARGING = 2;
+
+		public SimpleBatteryProvider(Context c, Scheme scheme) {
+			mContext = c;
+			scheme.getEnvironment().define("*level*", LEVEL);
+			scheme.getEnvironment().define("*charging*", IS_CHARGING);
+			scheme.getEnvironment().define("*charging/usb*", 2);
+			scheme.getEnvironment().define("*charging/ac*", 1);
+			scheme.getEnvironment().define("*charging/none*", 0);
+		}
+
 		public Object apply(Scheme scheme, Object args) {
-			String s = "";
-			for ( ; args instanceof Pair; args = ((Pair)args).rest) {
-				s = s + stringify(first(args)) + " ";
+			int arg = (int) num(first(args));
+
+			IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+			Intent batteryStatus = mContext.registerReceiver(null, filter);
+
+			int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+			boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+				status == BatteryManager.BATTERY_STATUS_FULL;
+			int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+			boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
+			boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
+
+			int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+			int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+			float batteryPct = level / (float) scale;
+
+			if (arg == LEVEL) {
+				return num(batteryPct);
+			} else if (arg == IS_CHARGING) {
+				if (isCharging) {
+					return num(1);
+				} else {
+					return num(0);
+				}
 			}
-			Log.d(tag, s);
-			return args;
+			return FALSE;
+		}
+	}
+
+	// (format fmt ...) - output logs
+	public static class Format extends Procedure {
+		public Object apply(Scheme scheme, Object args) {
+			char[] fmt = (char[]) first(args);
+			Log.d(tag, "fmt = " + new String(fmt));
+			args = rest(args);
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < fmt.length; i++) {
+				if (fmt[i] == '~') {
+					i++;
+					if (i == fmt.length) {
+						return FALSE;
+					}
+					if (fmt[i] == 'a') {
+						sb.append(stringify(first(args), true));
+						args = rest(args);
+					} else if (fmt[i] == 's') {
+						sb.append(stringify(first(args), false));
+						args = rest(args);
+					} else if (fmt[i] == '%') {
+						sb.append('\n');
+					} else if (fmt[i] == '~') {
+						sb.append('~');
+					} else {
+						return FALSE;
+					}
+				} else {
+					sb.append(fmt[i]);
+				}
+			}
+			Log.d(tag, "sb = " + sb.toString());
+			return sb.toString();
 		}
 	}
 

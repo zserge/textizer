@@ -67,9 +67,12 @@ public class WidgetPresenter {
 		mPixelHeight = (int) (dipHeight * mContext.getResources().getDisplayMetrics().density);
 
 		scheme = new Scheme(null);
-		scheme.getEnvironment().define("logd", new SchemeBindings.Logger());
+		scheme.getEnvironment().define("format", new SchemeBindings.Format());
+		scheme.getEnvironment().define("hack-size", new SchemeBindings.HackWidgetSize(this));
 		scheme.getEnvironment().define("hack-size", new SchemeBindings.HackWidgetSize(this));
 		scheme.getEnvironment().define("clock", new SchemeBindings.SimpleClockProvider());
+		scheme.getEnvironment().define("battery", 
+				new SchemeBindings.SimpleBatteryProvider(mContext, scheme));
 		scheme.getEnvironment().define("style", new SchemeBindings.PaintStyle(this));
 		scheme.getEnvironment().define("grid", new SchemeBindings.Grid(this));
 		scheme.getEnvironment().define("cell", new SchemeBindings.Cell(this));
